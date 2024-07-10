@@ -8,7 +8,7 @@ class TaskEntity {
   String? snakeCaseBriefTranscript;
   TaskMode taskMode;
   int position;
-  String? image_path;
+  String? imagePath;
   int timeForCompletion;
   bool mayRepeatPrompt;
   bool test_only;
@@ -19,7 +19,7 @@ class TaskEntity {
     required this.title,
     required this.taskMode,
     required this.position,
-    this.image_path,
+    this.imagePath,
     this.timeForCompletion = 30,
     this.mayRepeatPrompt = true,
     this.test_only = false,
@@ -34,7 +34,7 @@ class TaskEntity {
       MODULE_ID: moduleID,
       MODE: taskMode.numericValue,
       POSITION: position,
-      IMAGE_PATH: image_path,
+      IMAGE_PATH: imagePath,
       TIME_FOR_COMPLETION: timeForCompletion,
       MAY_REPEAT_PROMPT: mayRepeatPrompt ? 1 : 0,
       TEST_ONLY: test_only ? 1 : 0,
@@ -50,7 +50,7 @@ class TaskEntity {
         moduleID: map[MODULE_ID] as int,
         taskMode: mode,
         position: map[POSITION] as int,
-        image_path: map[IMAGE_PATH] as String?,
+        imagePath: map[IMAGE_PATH] as String?,
         timeForCompletion: map[TIME_FOR_COMPLETION],
         mayRepeatPrompt: map[MAY_REPEAT_PROMPT] == 1 ? true : false,
         test_only: map[MAY_REPEAT_PROMPT] == 1 ? true : false);
@@ -63,7 +63,7 @@ class TaskEntity {
         'title: "$title", '
         'taskMode: ${taskMode.description}, '
         'position: $position, '
-        'image_path: "$image_path,'
+        'image_path: "$imagePath,'
         'imeForCompletion: $timeForCompletion'
         '}';
   }

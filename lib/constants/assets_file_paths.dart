@@ -83,3 +83,7 @@ class AudioFilePaths {
   static String get digaDoisAnimais => 'assets/test_prompts/diga_dois_animais_4_patas.mp3';
   static String get repitaAFrase => 'assets/test_prompts/repita_a_frase.mp3';
 }
+
+class ImageFilePaths {
+  static String get describe_what_you_see_task => 'assets/images/imagem_sala.png';
+}

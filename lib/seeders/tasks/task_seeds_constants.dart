@@ -9,7 +9,7 @@ String whatsYourNameTaskSnakeCaseTranscript = "what_is_your_name";
 String whatsYourNameTaskTitle = "Dados Pessoais";
 int whatsYourNameTaskId = 2;
 
-String whatsYourDOBTaskSnakeCaseTranscript = "what_is_dob";
+String whatsYourDOBTaskSnakeCaseTranscript = "what_is_your_dob";
 String whatsYourDOBTaskTitle = "Dados Pessoais";
 int whatsYourDOBTaskId = 3;
 

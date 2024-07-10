@@ -1,6 +1,7 @@
 library task_seeds;
 
 import '../../app/task/task_entity.dart';
+import '../../constants/assets_file_paths.dart';
 import '../../constants/enums/task_enums.dart';
 import '../modules/modules_seeds.dart';
 
@@ -24,7 +25,7 @@ TaskEntity helloHowAreYouTask = TaskEntity(
 TaskEntity whatsYourNameTask = TaskEntity(
     taskID: whatsYourNameTaskId,
     title: whatsYourNameTaskTitle,
-    snakeCaseBriefTranscript: whatsYourDOBTaskSnakeCaseTranscript,
+    snakeCaseBriefTranscript: whatsYourNameTaskSnakeCaseTranscript,
     moduleID: sociodemographicInfoId,
     taskMode: TaskMode.record,
     timeForCompletion: 40,
@@ -402,6 +403,7 @@ TaskEntity describeWhatYouSeeTask = TaskEntity(
   taskMode: TaskMode.record,
   timeForCompletion: 40,
   mayRepeatPrompt: true,
+  imagePath: ImageFilePaths.describe_what_you_see_task,
   position: 26,
 );
 // cognitiveFunctions - 27
@@ -604,14 +606,14 @@ TaskEntity hopefulAboutFutureTask = TaskEntity(
 );
 // depressionSymptoms - 9
 TaskEntity feelingLifeIsWorthLivingTask = TaskEntity(
-    taskID: feelingLifeIsWorthLivingTaskId,
-    title: feelingLifeIsWorthLivingTaskTitle,
-    snakeCaseBriefTranscript: feelingLifeIsWorthLivingTaskSnakeCaseTranscript,
-    moduleID: depressionSymptomsId,
-    taskMode: TaskMode.record,
-    timeForCompletion: 40,
-    mayRepeatPrompt: true,
-    position: 9,
+  taskID: feelingLifeIsWorthLivingTaskId,
+  title: feelingLifeIsWorthLivingTaskTitle,
+  snakeCaseBriefTranscript: feelingLifeIsWorthLivingTaskSnakeCaseTranscript,
+  moduleID: depressionSymptomsId,
+  taskMode: TaskMode.record,
+  timeForCompletion: 40,
+  mayRepeatPrompt: true,
+  position: 9,
 );
 // depressionSymptoms - 10
 TaskEntity thankingForParticipationTask = TaskEntity(
