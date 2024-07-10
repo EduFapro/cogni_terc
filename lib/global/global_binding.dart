@@ -103,11 +103,10 @@ class GlobalBinding extends Bindings {
         evaluationRepository: Get.find()));
     Get.put<EvalDataService>(EvalDataService(), permanent: true);
 
-    final key =
-        Key.fromUtf8('12345678901234567890123456789012'); // 32 bytes key
-    final iv = IV.fromLength(16); // AES block size is 16 bytes
 
-    final fileEncryptor = FileEncryptor(key, iv);
+    final key = Key.fromUtf8('12345678901234567890123456789012'); // 32 bytes key
+
+    final fileEncryptor = FileEncryptor(key);
 
     Get.put<FileEncryptor>(fileEncryptor, permanent: true);
   }
