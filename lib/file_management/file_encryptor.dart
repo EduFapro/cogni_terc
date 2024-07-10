@@ -37,4 +37,5 @@ class FileEncryptor {
     await originalFile.delete();
     return encryptedFilePath;
   }
+
 }
