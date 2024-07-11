@@ -477,9 +477,9 @@ class TaskScreenController extends GetxController {
   Future<void> setModuleInstanceAsCompleted(int moduleInstanceId) async {
     await evaluationService.setModuleInstanceAsCompleted(moduleInstanceId);
     var evaluationID =
-        Get.find<EvaluationController>().evaluation.value!.evaluationID!;
+    Get.find<EvaluationController>().evaluation.value!.evaluationID!;
     bool allModulesCompleted =
-        await evaluationService.areAllModulesCompleted(evaluationID);
+    await evaluationService.areAllModulesCompleted(evaluationID);
     if (allModulesCompleted) {
       print("All modules completed. Evaluation can be marked as completed.");
       evaluationRepository.setEvaluationAsCompleted(evaluationID);

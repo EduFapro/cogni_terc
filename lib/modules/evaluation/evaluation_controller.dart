@@ -72,7 +72,7 @@ class EvaluationController extends GetxController {
   }
 
   Future<List<ModuleEntity>?> getModulesByEvaluationId(
-          int evaluationId) async =>
+      int evaluationId) async =>
       await evaluationService.getModulesByEvaluationId(evaluationId);
 
   Future<void> fetchTaskInstancesForModuleInstances(
@@ -223,27 +223,4 @@ class EvaluationController extends GetxController {
 
 
   }
-
-  //
-  // void checkAndFinalizeEvaluation() {
-  //   print("HOIHOHO");
-  //   bool allModulesCompleted = modulesInstanceList.value?.every((module) {
-  //         print(module);
-  //         print(module.status);
-  //         return module.status == ModuleStatus.completed;
-  //       }) ??
-  //       false;
-  //   print("ASDSAD");
-  //   if (allModulesCompleted) {
-  //     var evalId = evaluation.value?.evaluationID;
-  //     if (evalId != null) {
-  //       evaluationService.setEvaluationAsCompleted(evalId).then((_) {
-  //         evaluation.value?.status = EvaluationStatus.completed;
-  //         evaluation.refresh();
-  //         Get.find<HomeController>().refreshEvaluations();
-  //         Get.find<HomeController>().refreshEvaluationCounts();
-  //       });
-  //     }
-  //   }
-  // }
 }

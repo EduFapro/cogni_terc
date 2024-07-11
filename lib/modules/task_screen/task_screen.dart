@@ -8,6 +8,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../constants/enums/task_enums.dart';
 import '../../constants/translation/ui_strings.dart';
+import '../evaluation/evaluation_controller.dart';
 import '../widgets/music_visualizer.dart';
 import 'countdown_timer.dart';
 import 'task_screen_controller.dart';
@@ -25,7 +26,12 @@ class TaskScreen extends GetView<TaskScreenController> {
           Expanded(
             child: Obx(() {
               if (controller.isModuleCompleted.isTrue) {
-                return TaskCompletedWidget(onNavigateBack: () => Get.back());
+                return TaskCompletedWidget(onNavigateBack: () {
+                  final evalController = Get.find<EvaluationController>();
+                  evalController.markModuleAsCompleted(
+                      controller.moduleInstance.value!.moduleInstanceID!);
+                  Get.back();
+                });
               } else if (controller.currentTask.value != null) {
                 var mode = controller.taskMode.value;
                 return Column(

@@ -18,6 +18,7 @@ import '../../file_management/file_encryptor.dart';
 import '../../global/user_service.dart';
 import '../eval_data/eval_data_service.dart';
 
+
 class HomeController extends GetxController {
   final UserService userService = Get.find<UserService>();
   final FileEncryptor fileEncryptor = Get.find<FileEncryptor>();
@@ -55,10 +56,10 @@ class HomeController extends GetxController {
     ever(selectedStatus, (_) => filterEvaluationsByStatus());
     ever(
         evaluations,
-        (_) => {
-              // Ensure filteredEvaluations is updated whenever evaluations list changes
-              filterEvaluationsByStatus()
-            });
+            (_) => {
+          // Ensure filteredEvaluations is updated whenever evaluations list changes
+          filterEvaluationsByStatus()
+        });
     searchController.addListener(() {
       performSearch(searchController.text);
     });
@@ -68,6 +69,15 @@ class HomeController extends GetxController {
   void onReady() {
     super.onReady();
     refreshEvaluations();
+  }
+  var hoverStates = Map<int, RxBool>().obs;
+
+
+  // Function to set hover state
+
+  void setHoverState(int evaluationID, IconData iconData, bool isHovering) {
+    int uniqueKey = evaluationID.hashCode ^ iconData.hashCode; // Unique identifier for each icon
+    hoverStates[uniqueKey] = isHovering.obs; // Use .obs to make it observable
   }
 
   void resetFilters() {
@@ -151,7 +161,7 @@ class HomeController extends GetxController {
       int evaluationId, String evaluatorId, String participantId) async {
     // 1. Fetch all task instances related to the evaluation
     List<TaskInstanceEntity> taskInstances =
-        await fetchTaskInstancesForEvaluation(evaluationId);
+    await fetchTaskInstancesForEvaluation(evaluationId);
 
     // 2. Fetch all recordings for these task instances
     List<RecordingFileEntity> recordings = [];
@@ -163,16 +173,16 @@ class HomeController extends GetxController {
 
     // 3. Create the folder in the downloads directory
     String downloadFolderPath =
-        await createDownloadFolder(evaluatorId, participantId);
+    await createDownloadFolder(evaluatorId, participantId);
 
     // 4. Copy the audio files to the new folder
     // Decrypt files and rename them back to .aac
     for (var recording in recordings) {
       String encryptedFilePath = recording.filePath;
       String fileNameWithoutExtension =
-          path.basenameWithoutExtension(encryptedFilePath);
+      path.basenameWithoutExtension(encryptedFilePath);
       String decryptedFilePath =
-          path.join(downloadFolderPath, fileNameWithoutExtension);
+      path.join(downloadFolderPath, "$fileNameWithoutExtension");
 
       // Decrypt the file back to its original form
       await fileEncryptor.decryptFile(encryptedFilePath, decryptedFilePath);
@@ -235,8 +245,8 @@ class HomeController extends GetxController {
         evaluations.where((evaluation) {
           final participant = participantDetails[evaluation.participantID];
           return participant?.name
-                  .toLowerCase()
-                  .contains(query.toLowerCase()) ??
+              .toLowerCase()
+              .contains(query.toLowerCase()) ??
               false;
         }).toList(),
       );
@@ -246,7 +256,7 @@ class HomeController extends GetxController {
 
   void setEvaluationInProgress(int evaluationId) {
     var index =
-        evaluations.indexWhere((eval) => eval.evaluationID == evaluationId);
+    evaluations.indexWhere((eval) => eval.evaluationID == evaluationId);
     if (index != -1) {
       var evaluation = evaluations[index];
       evaluation.status = EvaluationStatus.in_progress;
@@ -276,4 +286,20 @@ class HomeController extends GetxController {
     isLoading.value = false;
     update();
   }
+
+  Future<void> deleteEvaluation({required EvaluationEntity evaluation}) async {
+    isLoading(true); // Show loading indicator
+    var deleteResult = await userService.deleteEvaluation(evaluation);
+
+    if (deleteResult != null) {
+      evaluations.remove(evaluation); // This should trigger UI update
+      // It's important that you remove the exact same instance that's present in the list
+      refreshEvaluations(); // Refresh the evaluations list
+    } else {
+      // Handle the case where the deletion was not successful
+    }
+
+    isLoading(false); // Hide loading indicator
+  }
+
 }
