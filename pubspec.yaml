@@ -26,6 +26,7 @@ dependencies:
   audioplayers: ^5.2.0
   encrypt: ^5.0.0
   percent_indicator: ^4.2.3
+  window_manager: ^0.3.9
 
 dev_dependencies:
   flutter_test:

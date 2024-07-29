@@ -123,7 +123,9 @@ class EdEvaluationHistory extends GetView<HomeController> {
                 child: Text(UiStrings.date,
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
-              SizedBox(width: 170,)
+              SizedBox(
+                width: 170,
+              )
             ],
           ),
           Divider(),
@@ -281,7 +283,7 @@ class StatusSwitchFilter extends GetView<HomeController> {
                   }).toList(),
                   hint: controller.selectedStatus.value == null
                       ? Text(
-                          "Select",
+                          UiStrings.select,
                           style:
                               TextStyle(color: Colors.white.withOpacity(0.7)),
                         )

@@ -3,7 +3,7 @@ final Map<String, String> ptBrTranslations = {
   'new_participant': 'Novo Avaliando',
   'password': 'Senha',
   'login': 'Entrar',
-  'username': 'Username',
+  'username': 'Usuário',
   'home': 'Início',
   'evaluators': 'Avaliadores',
   'total_projects': 'Total de Projetos',
@@ -57,6 +57,13 @@ final Map<String, String> ptBrTranslations = {
   'play_mode': 'Reproduzir',
   'record_mode': 'Gravar',
   'start_task_button': "Iniciar",
-  "postgraduate": "Pós Graduação",
+  "postgraduate": "Pós-Graduação",
   "other_sex": "Outro",
+  "modify_password" : "Mudar Senha",
+  "search_placeholder" : "Pesquisar...",
+  "error" : "Erro",
+  "select" : "Selecionar",
+
+  //LONG MESSAGES
+  'cpf_already_in_use' : "Um avaliador com este CPF já está registrado.",
 };

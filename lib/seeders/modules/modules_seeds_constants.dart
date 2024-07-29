@@ -3,7 +3,7 @@ part of module_seeds;
 String sociodemographicInfo = 'Dados Sociodemográficos';
 int sociodemographicInfoId = 1;
 
-String cognitiveFunctions = 'Funções cognitivas';
+String cognitiveFunctions = 'Funções Cognitivas';
 int cognitiveFunctionsId = 2;
 
 String functionality = 'Funcionalidade';

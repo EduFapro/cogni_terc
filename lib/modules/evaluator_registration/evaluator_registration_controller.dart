@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import '../../app/evaluator/evaluator_entity.dart';
 import '../../app/evaluator/evaluator_repository.dart';
 import '../../constants/route_arguments.dart';
+import '../../constants/translation/ui_messages.dart';
+import '../../constants/translation/ui_strings.dart';
 import '../../mixins/ValidationMixin.dart';
 import '../evaluators/evaluators_controller.dart';
 
@@ -122,7 +124,7 @@ class EvaluatorRegistrationController extends GetxController
     bool cpfExists = await _repository.evaluatorCpfExists(cpf);
     if (cpfExists) {
       Get.snackbar(
-          'Error', 'An evaluator with this CPF is already registered.');
+          UiStrings.error, UiMessages.cpfAlreadyInUse);
       return false;
     }
 

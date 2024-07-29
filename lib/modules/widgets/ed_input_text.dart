@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../constants/translation/ui_strings.dart';
+
 class EdInputText extends StatelessWidget{
   final String placeholder;
   final bool obscureText;
@@ -61,7 +63,7 @@ class EdSearchBar extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 20),
         filled: true,
         fillColor: Colors.white.withOpacity(0.7),
-        hintText: "Search...",
+        hintText: UiStrings.searchPlaceholder,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
           borderSide: const BorderSide(color: Colors.blue, width: 2.0),

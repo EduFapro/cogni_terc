@@ -116,4 +116,12 @@ class UiStrings extends Translations {
   static String get recordMode => 'record_mode'.tr;
 
   static String get start_task_button => 'start_task_button'.tr;
+
+  static String get modifyPassword => 'modify_password'.tr;
+
+  static String get searchPlaceholder => 'search_placeholder'.tr;
+
+  static String get error => 'error'.tr;
+
+  static String get select => "select".tr;
 }

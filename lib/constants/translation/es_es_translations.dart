@@ -59,4 +59,11 @@ final Map<String, String> esEsTranslations = {
   'start_task_button': "Iniciar",
   "postgraduate": "Posgrado",
   "other_sex": "Otro",
+  "modify_password" : "Change Password",
+  "search_placeholder" : "Buscar...",
+  "error" : "Error",
+  "select" : "Seleccionar",
+
+  //LONG MESSAGES
+  'cpf_already_in_use' : "Un evaluador con este CPF ya está registrado.",
 };
