@@ -865,7 +865,7 @@ class CustomLinearPercentIndicator extends StatelessWidget {
             barRadius: const Radius.circular(10),
           ),
           Text(
-            '$current / $total',
+            '${current - 1}/ $total',
             style: TextStyle(
               color: Colors.black, // Color that contrasts with the bar color
               fontWeight: FontWeight.bold,
