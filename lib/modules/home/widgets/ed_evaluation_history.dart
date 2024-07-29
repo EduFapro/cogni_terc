@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../constants/enums/evaluation_enums.dart';
 import '../../../constants/route_arguments.dart';
 import '../../../constants/translation/ui_strings.dart';
@@ -15,6 +14,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     final HomeController homeController = Get.find<HomeController>();
 
     return Column(
@@ -28,23 +28,23 @@ class EdEvaluationHistory extends GetView<HomeController> {
         SizedBox(height: 20),
         // Status counters
         Obx(() => buildIconLabel(
-              context,
-              Icons.folder_open,
-              UiStrings.totalProjects,
-              controller.numEvaluationsTotal.value,
-            )),
+          context,
+          Icons.folder_open,
+          UiStrings.totalProjects,
+          controller.numEvaluationsTotal.value,
+        )),
         Obx(() => buildIconLabel(
-              context,
-              Icons.hourglass_empty,
-              UiStrings.inProgress,
-              controller.numEvaluationsInProgress.value,
-            )),
+          context,
+          Icons.hourglass_empty,
+          UiStrings.inProgress,
+          controller.numEvaluationsInProgress.value,
+        )),
         Obx(() => buildIconLabel(
-              context,
-              Icons.check_circle_outline,
-              UiStrings.completed,
-              controller.numEvaluationsFinished.value,
-            )),
+          context,
+          Icons.check_circle_outline,
+          UiStrings.completed,
+          controller.numEvaluationsFinished.value,
+        )),
         SizedBox(height: 20),
         // Search bar and filter by status dropdown
         EdSearchBar(
@@ -95,74 +95,95 @@ class EdEvaluationHistory extends GetView<HomeController> {
   }
 
   Widget buildTable(HomeController homeController) {
+    final dateFormat = DateFormat('dd/MM/yyyy');
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          // Table Header
-          Row(
+      child: Table(
+        columnWidths: const <int, TableColumnWidth>{
+          0: FlexColumnWidth(2),
+          1: FlexColumnWidth(2),
+          2: FlexColumnWidth(2),
+          3: FlexColumnWidth(2),
+          4: FixedColumnWidth(200),
+        },
+        children: [
+          TableRow(
             children: [
-              Expanded(
-                flex: 2,
-                child: Text(UiStrings.name,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(UiStrings.name, style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
               ),
-              Expanded(
-                flex: 2,
-                child: Text(UiStrings.status,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(UiStrings.status, style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
               ),
-              Expanded(
-                flex: 2,
-                child: Text(UiStrings.evaluator,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(UiStrings.evaluator, style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
               ),
-              Expanded(
-                flex: 2,
-                child: Text(UiStrings.date,
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+              TableCell(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(UiStrings.date, style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
               ),
-              SizedBox(
-                width: 170,
-              )
+              TableCell(child: SizedBox.shrink()), // Empty cell for action icons
             ],
           ),
-          Divider(),
-          // List of evaluations
-          Obx(() {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: homeController.filteredEvaluations.length,
-              itemBuilder: (context, index) {
-                final evaluation = homeController.filteredEvaluations[index];
-                final dateFormat = DateFormat('dd/MM/yyyy');
-                final participant = controller.participants.firstWhere(
-                  (element) =>
-                      element.participantID == evaluation.participantID,
-                );
+          TableRow(
+            children: [
+              TableCell(child: Divider()),
+              TableCell(child: Divider()),
+              TableCell(child: Divider()),
+              TableCell(child: Divider()),
+              TableCell(child: Divider()),
+            ],
+          ),
+          ...homeController.filteredEvaluations.map((evaluation) {
+            final participant = controller.participants.firstWhere(
+                  (element) => element.participantID == evaluation.participantID,
+            );
 
-                return Card(
+            return TableRow(
+              children: [
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(participant.fullName ?? 'Unknown'),
+                  ),
+                ),
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(evaluation.status.description),
+                  ),
+                ),
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(homeController.user.value?.name ?? 'Unknown'),
+                  ),
+                ),
+                TableCell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(dateFormat.format(evaluation.evaluationDate!)),
+                  ),
+                ),
+                TableCell(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Expanded(
-                            flex: 2,
-                            child: Text(participant.fullName ?? 'Unknown')),
-                        Expanded(
-                            flex: 2,
-                            child: Text(evaluation.status.description)),
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                                homeController.user.value?.name ?? 'Unknown')),
-                        Expanded(
-                            flex: 2,
-                            child: Text(
-                                dateFormat.format(evaluation.evaluationDate!))),
-                        iconWithHoverEffect(
-                            evaluation.evaluationID!, Icons.create_rounded, () {
+                        iconWithHoverEffect(evaluation.evaluationID!, Icons.create_rounded, () {
                           Get.toNamed(
                             AppRoutes.evaluation,
                             arguments: {
@@ -171,39 +192,32 @@ class EdEvaluationHistory extends GetView<HomeController> {
                               RouteArguments.EVALUATION: evaluation,
                             },
                           );
-                        }),
-                        SizedBox(width: 36),
-                        iconWithHoverEffect(
-                            evaluation.evaluationID!, Icons.delete, () {
-                          print("Trashcan clicked a");
+                        }, "Abrir"),
+                        SizedBox(width: 8),
+                        iconWithHoverEffect(evaluation.evaluationID!, Icons.delete, () {
                           controller.deleteEvaluation(evaluation: evaluation);
-                          print("Trashcan clicked b");
-                        }),
-                        SizedBox(width: 36),
-                        iconWithHoverEffect(
-                            evaluation.evaluationID!, Icons.download_rounded,
-                            () {
-                          print(
-                              'Download button tapped for evaluation ID: ${evaluation.evaluationID}');
+                        }, "Deletar"),
+                        SizedBox(width: 8),
+                        iconWithHoverEffect(evaluation.evaluationID!, Icons.download_rounded, () {
                           homeController.handleDownload(
                             evaluation.evaluationID!,
                             evaluation.evaluatorID.toString(),
                             evaluation.participantID.toString(),
                           );
                           homeController.createDownload(evaluation);
-                        }),
-                        SizedBox(width: 18),
+                        }, "Download"),
                       ],
                     ),
                   ),
-                );
-              },
+                ),
+              ],
             );
-          }),
+          }).toList(),
         ],
       ),
     );
   }
+
 
   Widget buildIconLabel(
       BuildContext context, IconData icon, String label, int count) {
@@ -213,14 +227,14 @@ class EdEvaluationHistory extends GetView<HomeController> {
         children: <Widget>[
           Icon(icon, size: 24.0),
           SizedBox(width: 8.0),
-          Text('$label: $count'),
+          Text('$label: $count',),
         ],
       ),
     );
   }
 
-  Widget iconWithHoverEffect(
-      int evaluationID, IconData iconData, void Function()? onTap) {
+  Widget iconWithHoverEffect(int evaluationID, IconData iconData,
+      void Function()? onTap, String label) {
     int uniqueKey = evaluationID.hashCode ^ iconData.hashCode;
 
     return Obx(() {
@@ -228,12 +242,17 @@ class EdEvaluationHistory extends GetView<HomeController> {
       return MouseRegion(
         onEnter: (_) => controller.setHoverState(evaluationID, iconData, true),
         onExit: (_) => controller.setHoverState(evaluationID, iconData, false),
-        child: GestureDetector(
-          onTap: onTap,
-          child: Icon(
-            iconData,
-            color: isHovering ? Colors.blue : Colors.grey,
-          ),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: onTap,
+              child: Icon(
+                iconData,
+                color: isHovering ? Colors.blue : Colors.grey,
+              ),
+            ),
+            Text(label, style: TextStyle(fontSize: 14),),
+          ],
         ),
       );
     });
@@ -275,18 +294,18 @@ class StatusSwitchFilter extends GetView<HomeController> {
                   items: EvaluationStatus.values
                       .map<DropdownMenuItem<EvaluationStatus>>(
                           (EvaluationStatus status) {
-                    return DropdownMenuItem<EvaluationStatus>(
-                      value: status,
-                      child: Text(status.description,
-                          style: TextStyle(color: Colors.white)),
-                    );
-                  }).toList(),
+                        return DropdownMenuItem<EvaluationStatus>(
+                          value: status,
+                          child: Text(status.description,
+                              style: TextStyle(color: Colors.white)),
+                        );
+                      }).toList(),
                   hint: controller.selectedStatus.value == null
                       ? Text(
-                          UiStrings.select,
-                          style:
-                              TextStyle(color: Colors.white.withOpacity(0.7)),
-                        )
+                    UiStrings.select,
+                    style:
+                    TextStyle(color: Colors.white.withOpacity(0.7)),
+                  )
                       : null,
                 ),
               ),

@@ -23,15 +23,15 @@ class TaskScreen extends GetView<TaskScreenController> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            final evalController = Get.find<EvaluationController>();
-            evalController.markModuleAsCompleted(
-                controller.moduleInstance.value!.moduleInstanceID!);
-
-            Navigator.of(context).pop();
-          },
-        ),
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              if (controller.isModuleCompleted.isTrue) {
+                final evalController = Get.find<EvaluationController>();
+                evalController.markModuleAsCompleted(
+                    controller.moduleInstance.value!.moduleInstanceID!);
+              }
+              Get.back();
+            }),
       ),
       body: Column(
         children: [
@@ -165,7 +165,8 @@ class TaskScreen extends GetView<TaskScreenController> {
                                 ? null
                                 : () => controller.togglePlay(),
                           ),
-                          Text(UiStrings.play_audio, style: TextStyle(fontSize: 16)),
+                          Text(UiStrings.play_audio,
+                              style: TextStyle(fontSize: 16)),
                           // Subtitle label
                         ],
                       ),

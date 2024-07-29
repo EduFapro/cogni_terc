@@ -1,12 +1,13 @@
 import 'package:get/get.dart';
 
-import '../../app/evaluation/evaluation_entity.dart';
+
+import '../../app/evaluator/evaluator_entity.dart';
 import '../../app/evaluator/evaluator_repository.dart';
 import '../../constants/route_arguments.dart';
 
 class NewPasswordController extends GetxController {
   late bool isFirstLogin;
-  late EvaluationEntity evaluator;
+  late EvaluatorEntity evaluator;
 
   final EvaluatorRepository evaluatorRepository;
 
@@ -21,7 +22,7 @@ class NewPasswordController extends GetxController {
   }
 
   Future<void> changePassword(String newPassword) async {
-    var fetchedEvaluator = await evaluatorRepository.getEvaluator(evaluator.evaluatorID);
+    var fetchedEvaluator = await evaluatorRepository.getEvaluator(evaluator.evaluatorID!);
     if (fetchedEvaluator != null) {
       fetchedEvaluator.password = newPassword;
       fetchedEvaluator.firstLogin = false;

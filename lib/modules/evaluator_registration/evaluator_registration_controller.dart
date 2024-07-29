@@ -104,6 +104,7 @@ class EvaluatorRegistrationController extends GetxController
 
   void selectDate(BuildContext context) async {
     DateTime? pickedDate = await showDatePicker(
+      locale: Get.locale,
       context: context,
       initialDate: selectedDate.value ?? DateTime.now(),
       firstDate: DateTime(1900),

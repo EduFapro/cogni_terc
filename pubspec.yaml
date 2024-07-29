@@ -9,6 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   cupertino_icons: ^1.0.2
   google_fonts: ^5.1.0
   path_provider: ^2.1.0
@@ -16,7 +18,7 @@ dependencies:
   path: ^1.8.3
   equatable: ^2.0.5
   provider: ^6.0.5
-  intl: ^0.18.1
+  intl: ^0.19.0
   get: ^4.6.5
   sqflite_common_ffi: ^2.3.0+2
   flutter_dotenv: ^5.1.0

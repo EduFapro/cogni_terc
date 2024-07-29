@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../constants/translation/ui_strings.dart';
-import '../../../global/user_controller.dart';
 import '../../../global/user_service.dart';
 import '../../../routes.dart';
 import '../../widgets/ed_language_dropdown.dart';
