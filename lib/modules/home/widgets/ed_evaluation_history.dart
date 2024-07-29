@@ -28,23 +28,23 @@ class EdEvaluationHistory extends GetView<HomeController> {
         SizedBox(height: 20),
         // Status counters
         Obx(() => buildIconLabel(
-          context,
-          Icons.folder_open,
-          UiStrings.totalProjects,
-          controller.numEvaluationsTotal.value,
-        )),
+              context,
+              Icons.folder_open,
+              UiStrings.totalProjects,
+              controller.numEvaluationsTotal.value,
+            )),
         Obx(() => buildIconLabel(
-          context,
-          Icons.hourglass_empty,
-          UiStrings.inProgress,
-          controller.numEvaluationsInProgress.value,
-        )),
+              context,
+              Icons.hourglass_empty,
+              UiStrings.inProgress,
+              controller.numEvaluationsInProgress.value,
+            )),
         Obx(() => buildIconLabel(
-          context,
-          Icons.check_circle_outline,
-          UiStrings.completed,
-          controller.numEvaluationsFinished.value,
-        )),
+              context,
+              Icons.check_circle_outline,
+              UiStrings.completed,
+              controller.numEvaluationsFinished.value,
+            )),
         SizedBox(height: 20),
         // Search bar and filter by status dropdown
         EdSearchBar(
@@ -133,10 +133,10 @@ class EdEvaluationHistory extends GetView<HomeController> {
               itemCount: homeController.filteredEvaluations.length,
               itemBuilder: (context, index) {
                 final evaluation = homeController.filteredEvaluations[index];
-                final dateFormat = DateFormat.yMd();
+                final dateFormat = DateFormat('dd/MM/yyyy');
                 final participant = controller.participants.firstWhere(
-                      (element) =>
-                  element.participantID == evaluation.participantID,
+                  (element) =>
+                      element.participantID == evaluation.participantID,
                 );
 
                 return Card(
@@ -179,16 +179,16 @@ class EdEvaluationHistory extends GetView<HomeController> {
                         SizedBox(width: 36),
                         iconWithHoverEffect(
                             evaluation.evaluationID!, Icons.download_rounded,
-                                () {
-                              print(
-                                  'Download button tapped for evaluation ID: ${evaluation.evaluationID}');
-                              homeController.handleDownload(
-                                evaluation.evaluationID!,
-                                evaluation.evaluatorID.toString(),
-                                evaluation.participantID.toString(),
-                              );
-                              homeController.createDownload(evaluation);
-                            }),
+                            () {
+                          print(
+                              'Download button tapped for evaluation ID: ${evaluation.evaluationID}');
+                          homeController.handleDownload(
+                            evaluation.evaluationID!,
+                            evaluation.evaluatorID.toString(),
+                            evaluation.participantID.toString(),
+                          );
+                          homeController.createDownload(evaluation);
+                        }),
                         SizedBox(width: 18),
                       ],
                     ),
@@ -272,18 +272,18 @@ class StatusSwitchFilter extends GetView<HomeController> {
                   items: EvaluationStatus.values
                       .map<DropdownMenuItem<EvaluationStatus>>(
                           (EvaluationStatus status) {
-                        return DropdownMenuItem<EvaluationStatus>(
-                          value: status,
-                          child: Text(status.description,
-                              style: TextStyle(color: Colors.white)),
-                        );
-                      }).toList(),
+                    return DropdownMenuItem<EvaluationStatus>(
+                      value: status,
+                      child: Text(status.description,
+                          style: TextStyle(color: Colors.white)),
+                    );
+                  }).toList(),
                   hint: controller.selectedStatus.value == null
                       ? Text(
-                    "Select",
-                    style:
-                    TextStyle(color: Colors.white.withOpacity(0.7)),
-                  )
+                          "Select",
+                          style:
+                              TextStyle(color: Colors.white.withOpacity(0.7)),
+                        )
                       : null,
                 ),
               ),

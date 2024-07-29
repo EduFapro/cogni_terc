@@ -20,7 +20,18 @@ class TaskScreen extends GetView<TaskScreenController> {
   Widget build(BuildContext context) {
     var windowsSize = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            final evalController = Get.find<EvaluationController>();
+            evalController.markModuleAsCompleted(
+                controller.moduleInstance.value!.moduleInstanceID!);
+
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
