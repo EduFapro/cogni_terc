@@ -306,7 +306,7 @@ class EvaluatorRegistrationController extends GetxController
     // Attempt to update the evaluator in the database
     int updateCount = await _repository.updateEvaluator(updatedEvaluator);
     if (updateCount == 1) {
-      // Success, update the UI or do whatever is needed
+      _evaluatorsController.updateEvaluatorInList(updatedEvaluator);
       return true;
     } else {
       // Update failed

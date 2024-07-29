@@ -56,9 +56,20 @@ class EvaluatorsController extends GetxController {
 
     // Refresh the filtered list
     performSearch('');
-   
+
 
     update();
   }
+  void updateEvaluatorInList(EvaluatorEntity updatedEvaluator) {
+    final index = evaluatorsList.indexWhere((e) => e.evaluatorID == updatedEvaluator.evaluatorID);
+    if (index != -1) {
+      evaluatorsList[index] = updatedEvaluator; // Update the evaluator in the list
+      evaluatorsList.refresh(); // If evaluatorsList is an RxList, this will trigger UI update
+      // Reapply the current search to update the filtered list.
+      performSearch(searchController.text);
+    }
+  }
+
+
 }
 
