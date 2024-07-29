@@ -29,14 +29,14 @@ class EvaluatorRegistrationController extends GetxController
 
   final RxBool isPasswordChangeEnabled = false.obs;
 
-  // var selectedSex = Rx<Sex?>(null);
-
   final RxBool isEditMode = false.obs;
   var selectedDate = Rx<DateTime?>(null);
   var isGeneratingUsername = false.obs;
   var isUsernameValid = false.obs;
   final FocusNode fullNameFocusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
+  final RxBool isUsernameModified = false.obs;
+
 
   @override
   void onInit() {
@@ -45,36 +45,33 @@ class EvaluatorRegistrationController extends GetxController
     if (Get.arguments != null &&
         Get.arguments[RouteArguments.EVALUATOR] != null) {
       isEditMode.value = true;
-      // Attempt to get the evaluator passed as an argument
       evaluator.value = Get.arguments[RouteArguments.EVALUATOR];
-      // If there's an evaluator, populate form fields
-      if (evaluator != null) {
+      if (evaluator.value != null) {
         _populateFieldsWithEvaluatorData(evaluator.value!.evaluatorID!);
+        isUsernameValid.value = true;
       }
     } else {
       isEditMode.value = false;
     }
 
-    if (!isEditMode.value) {
-      fullNameFocusNode.addListener(
-        () async {
-          if (!fullNameFocusNode.hasFocus) {
-            final validationResult = validateFullName(fullNameController.text);
-            if (validationResult == null) {
-              String baseUsername =
-                  generateUsername(fullNameController.text, []);
+    fullNameFocusNode.addListener(() {
+      if (!fullNameFocusNode.hasFocus && !isEditMode.value) {
+        final validationResult = validateFullName(fullNameController.text);
+        if (validationResult == null) {
+          String baseUsername = generateUsername(fullNameController.text, []);
+          checkAndUpdateUsername(baseUsername);
+        } else {
+          username.value = '';
+          isUsernameValid.value = false;
+        }
+      }
+    });
 
-              await checkAndUpdateUsername(baseUsername);
-            } else {
-              username.value = '';
-              isUsernameValid.value = false;
-            }
-          }
-        },
-      );
-    } else {
-      isUsernameValid.value = true;
-    }
+    usernameController.addListener(() {
+      if (isEditMode.value) {
+        isUsernameModified.value = usernameController.text != originalUsername.value;
+      }
+    });
 
     if (isEditMode.isTrue && evaluator.value != null) {
       originalUsername.value = evaluator.value!.username;
@@ -82,6 +79,8 @@ class EvaluatorRegistrationController extends GetxController
 
     print("Edit mode: ${isEditMode.value}");
   }
+
+
 
   Future<void> _populateFieldsWithEvaluatorData(int evaluatorId) async {
     try {
@@ -165,7 +164,7 @@ class EvaluatorRegistrationController extends GetxController
 
       // Use the copyWith method to create a new instance of EvaluatorEntity with the received ID.
       EvaluatorEntity updatedEvaluator =
-          newEvaluator.copyWith(evaluatorID: evaluatorId);
+      newEvaluator.copyWith(evaluatorID: evaluatorId);
       print(updatedEvaluator);
       // Add the updated evaluator to the controller.
       _evaluatorsController.addEvaluator(updatedEvaluator);
@@ -182,24 +181,20 @@ class EvaluatorRegistrationController extends GetxController
   }
 
   String generateUsername(String fullName, List<String> existingUsernames) {
-    // Split the full name into words
     List<String> words = fullName.split(' ');
 
-    // Take the first word and the last word to form the base username
-    String baseUsername =
-        "${words.first.toLowerCase()}_${words.last.toLowerCase()}";
-
-    // Initialize the username with the base form
+    String baseUsername = "${words.first.toLowerCase()}_${words.last.toLowerCase()}";
     String username = baseUsername;
     int counter = 1;
 
-    // If the username exists, append a number and increment until a unique username is found
     while (existingUsernames.contains(username)) {
-      username = '${baseUsername}${counter++}';
+      username = '$baseUsername$counter';
+      counter++;
     }
 
     return username;
   }
+
 
   @override
   void onClose() {
@@ -233,13 +228,19 @@ class EvaluatorRegistrationController extends GetxController
     // This pattern will match if the username ends with a number
     final numberSuffixPattern = RegExp(r'(\d+)$');
 
+    username.value = currentUsername;
+    usernameController.text = currentUsername; // Update the controller
+
+    if (isEditMode.isTrue && !isUsernameModified.value) {
+      isUsernameValid.value = true;
+      return;
+    }
+
     while (true) {
-      existingEvaluator =
-          await _repository.getEvaluatorByUsername(currentUsername);
+      existingEvaluator = await _repository.getEvaluatorByUsername(currentUsername);
       if (existingEvaluator != null) {
         // Check if the existing username ends with a number
-        final match =
-            numberSuffixPattern.firstMatch(existingEvaluator.username);
+        final match = numberSuffixPattern.firstMatch(existingEvaluator.username);
         if (match != null) {
           // If it does, parse the number, increment it, and append to the base username
           final number = int.parse(match.group(1)!);
@@ -256,8 +257,11 @@ class EvaluatorRegistrationController extends GetxController
 
     // Found a unique username, update the observable
     username.value = currentUsername;
+    usernameController.text = currentUsername; // Update the controller
     isUsernameValid.value = true;
   }
+
+
 
   void toggleEditMode() {
     isEditMode.value = !isEditMode.value;
@@ -276,16 +280,24 @@ class EvaluatorRegistrationController extends GetxController
   }
 
   Future<bool> updateEvaluator() async {
+    print("AIAIAI");
     var cpf = cpfOrNifController.text;
     var evaluatorId = evaluator.value!.evaluatorID!;
 
     // Check if CPF is registered to another evaluator
-    bool cpfExistsForOther =
-        await _repository.evaluatorCpfExistsForOther(evaluatorId, cpf);
+    bool cpfExistsForOther = await _repository.evaluatorCpfExistsForOther(evaluatorId, cpf);
     if (cpfExistsForOther) {
-      Get.snackbar(
-          'Error', 'This CPF is already registered to another evaluator.');
+      Get.snackbar(UiStrings.error, UiMessages.cpfAlreadyInUse);
       return false;
+    }
+
+    // Validate username if it has been modified
+    if (isEditMode.isTrue && isUsernameModified.value) {
+      await checkAndUpdateUsername(usernameController.text);
+      if (!isUsernameValid.value) {
+        print('Username is invalid'); // Debugging print statement
+        return false;
+      }
     }
 
     // Construct the EvaluatorEntity object with updated data
@@ -299,12 +311,11 @@ class EvaluatorRegistrationController extends GetxController
     );
 
     // Check if passwords should be updated
-    if (isPasswordChangeEnabled.value &&
-        newPasswordController.text.isNotEmpty) {
-      updatedEvaluator =
-          updatedEvaluator.copyWith(password: newPasswordController.text);
+    if (isPasswordChangeEnabled.value && newPasswordController.text.isNotEmpty) {
+      updatedEvaluator = updatedEvaluator.copyWith(password: newPasswordController.text);
     }
 
+    print(updatedEvaluator);
     // Attempt to update the evaluator in the database
     int updateCount = await _repository.updateEvaluator(updatedEvaluator);
     if (updateCount == 1) {
@@ -316,4 +327,6 @@ class EvaluatorRegistrationController extends GetxController
       return false;
     }
   }
+
+
 }

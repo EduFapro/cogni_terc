@@ -5,6 +5,7 @@ import 'es_es_translations.dart';
 import 'pt_br_translations.dart';
 
 class UiMessages extends Translations {
+
   @override
   Map<String, Map<String, String>> get keys => {
     'en_US': enUsTranslations,
@@ -13,5 +14,7 @@ class UiMessages extends Translations {
   };
 
   static String get cpfAlreadyInUse => 'cpf_already_in_use'.tr;
-
+  static String get taskCompleted => 'task_completed'.tr;
+  static String get allTasksCompleted => "all_tasks_completed".tr;
+  static String get allTasksCompletedInModule => "all_tasks_completed_in_module".tr;
 }

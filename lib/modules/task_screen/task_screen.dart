@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 import '../../constants/enums/task_enums.dart';
+import '../../constants/translation/ui_messages.dart';
 import '../../constants/translation/ui_strings.dart';
 import '../evaluation/evaluation_controller.dart';
 import '../widgets/music_visualizer.dart';
@@ -164,7 +165,7 @@ class TaskScreen extends GetView<TaskScreenController> {
                                 ? null
                                 : () => controller.togglePlay(),
                           ),
-                          Text('Play', style: TextStyle(fontSize: 16)),
+                          Text(UiStrings.play_audio, style: TextStyle(fontSize: 16)),
                           // Subtitle label
                         ],
                       ),
@@ -213,7 +214,7 @@ class TaskScreen extends GetView<TaskScreenController> {
                         displayMessage: "Atividade Pulada"),
                     CustomIconButton(
                         iconData: Icons.check,
-                        label: "Confirm",
+                        label: UiStrings.confirm,
                         onPressed: () => controller.onCheckButtonPressed(),
                         isActive: controller.isCheckButtonEnabled,
                         displayMessage: "Atividade Concluída"),
@@ -353,7 +354,7 @@ class TaskScreen extends GetView<TaskScreenController> {
                   CustomRecordingButton(controller: controller),
                   CustomIconButton(
                       iconData: Icons.check,
-                      label: "Confirm",
+                      label: UiStrings.confirm,
                       onPressed: () => controller.onCheckButtonPressed(),
                       isActive: controller.isCheckButtonEnabled,
                       displayMessage: "Atividade Concluída"),
@@ -399,12 +400,12 @@ class TaskScreen extends GetView<TaskScreenController> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                'Time Up!',
+                UiStrings.timeUp,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 20),
               Text(
-                'You have completed the time for this task.',
+                UiMessages.taskCompleted,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
@@ -525,7 +526,7 @@ class CustomRecordingButton extends StatelessWidget {
       var label = controller.isRecording.value ? "Parar" : "Gravar";
       var message = controller.isRecording.value
           ? "Gravação parada."
-          : "Iniciando Garavção";
+          : "Iniciando Gravação";
 
       return Column(
         mainAxisSize: MainAxisSize.min, // Use the minimum space available
@@ -785,7 +786,7 @@ class TaskCompletedWidget extends StatelessWidget {
             color: Colors.green,
           ),
           Text(
-            'All tasks completed!',
+            UiMessages.allTasksCompleted,
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -795,7 +796,7 @@ class TaskCompletedWidget extends StatelessWidget {
           SizedBox(height: 20),
           ElevatedButton(
             onPressed: onNavigateBack,
-            child: Text('Go Back'),
+            child: Text(UiStrings.goBack),
           ),
         ],
       ),

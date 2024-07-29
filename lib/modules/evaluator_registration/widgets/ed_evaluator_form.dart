@@ -148,7 +148,7 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
                           height: fieldContainerHeight,
                           width: fieldWidthRow2,
                           child: Obx(() => TextFormField(
-                            controller: TextEditingController(text: controller.username.value),
+                            controller: controller.usernameController,
                             decoration: InputDecoration(labelText: UiStrings.username),
                             readOnly: !(controller.isEditMode.value),  // Make this field editable only in edit mode
                           )),

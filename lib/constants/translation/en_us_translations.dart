@@ -63,7 +63,19 @@ final Map<String, String> enUsTranslations = {
   "search_placeholder": "Search...",
   "error": "Error",
   "select": "Select",
+  "confirmation": "Confirmation",
+  "yes": "Yes",
+  "no": "No",
+  "time_up" : 'Time Up!',
+  'go_back': 'Go Back',
+  "module_completed": 'Module Completed',
+  'play_audio': 'Listen',
+  'stop_audio': 'Stop',
+  'confirm': 'Confirm',
 
   //LONG MESSAGES
-  'cpf_already_in_use': "An evaluator with this CPF is already registered.",
+  'cpf_already_in_use' : "An evaluator with this CPF is already registered.",
+  'task_completed' : 'The time for completing this task is over.',
+  'all_tasks_completed': 'All Tasks Completed!',
+  'all_tasks_completed_in_module': 'You have completed all tasks in this module.',
 };

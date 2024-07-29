@@ -1,6 +1,6 @@
 part of module_seeds;
 
-String sociodemographicInfo = 'Dados Sociodemográficos';
+String sociodemographicInfo = 'Dados Pessoais';
 int sociodemographicInfoId = 1;
 
 String cognitiveFunctions = 'Funções Cognitivas';
