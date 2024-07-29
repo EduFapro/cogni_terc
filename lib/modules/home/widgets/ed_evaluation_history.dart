@@ -123,6 +123,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
                 child: Text(UiStrings.date,
                     style: TextStyle(fontWeight: FontWeight.bold)),
               ),
+              SizedBox(width: 170,)
             ],
           ),
           Divider(),
