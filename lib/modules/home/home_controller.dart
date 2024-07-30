@@ -4,6 +4,7 @@ import 'package:path/path.dart' as path;
 
 import '../../app/evaluation/evaluation_entity.dart';
 import '../../app/evaluator/evaluator_entity.dart';
+import '../../app/evaluator/evaluator_repository.dart';
 import '../../app/module_instance/module_instance_entity.dart';
 import '../../app/module_instance/module_instance_repository.dart';
 import '../../app/participant/participant_entity.dart';
@@ -18,7 +19,6 @@ import '../../file_management/file_encryptor.dart';
 import '../../global/user_service.dart';
 import '../eval_data/eval_data_service.dart';
 
-
 class HomeController extends GetxController {
   final UserService userService = Get.find<UserService>();
   final FileEncryptor fileEncryptor = Get.find<FileEncryptor>();
@@ -28,6 +28,7 @@ class HomeController extends GetxController {
   var evaluations = RxList<EvaluationEntity>();
   var participants = RxList<ParticipantEntity>();
   var participantDetails = RxMap<int, ParticipantEntity>();
+  var evaluators = RxMap<int, EvaluatorEntity>();
 
   var numEvaluationsInProgress = RxInt(0);
   var numEvaluationsFinished = RxInt(0);
@@ -35,6 +36,7 @@ class HomeController extends GetxController {
 
   var moduleInstanceRepository = Get.find<ModuleInstanceRepository>();
   var taskInstanceRepository = Get.find<TaskInstanceRepository>();
+  var evaluatorRepo = Get.find<EvaluatorRepository>();
   var recordingRepository = Get.find<RecordingRepository>();
   var evalDataService = Get.find<EvalDataService>();
 
@@ -104,6 +106,10 @@ class HomeController extends GetxController {
 
     ever(userService.participants, (List<ParticipantEntity> newParticipants) {
       participants.assignAll(newParticipants);
+      // Populate participantDetails map
+      participantDetails.assignAll({
+        for (var participant in newParticipants) participant.participantID!: participant
+      });
       update();
     });
 
@@ -117,8 +123,22 @@ class HomeController extends GetxController {
 
     user.value = userService.user.value;
 
+
+    if (user.value?.isAdmin ?? false) {
+      await userService.fetchAllEvaluationsAndParticipants();
+    } else {
+      await userService.fetchUserData(user.value?.evaluatorID);
+    }
+    await fetchAllEvaluators();
     isLoading.value = false;
     update();
+  }
+
+  Future<void> fetchAllEvaluators() async {
+    var allEvaluators = await evaluatorRepo.getAllEvaluators();
+    allEvaluators.forEach((evaluator) {
+      evaluators[evaluator.evaluatorID!] = evaluator;
+    });
   }
 
   void updateLoadingState() {
@@ -152,6 +172,10 @@ class HomeController extends GetxController {
 
     var updatedParticipants = await userService.fetchUpdatedParticipants();
     participants.assignAll(updatedParticipants);
+
+    participantDetails.assignAll({
+      for (var participant in updatedParticipants) participant.participantID!: participant
+    });
 
     isLoading.value = false;
     update(); // Notify listeners to rebuild the UI
@@ -238,11 +262,19 @@ class HomeController extends GetxController {
 
   void performSearch(String query) {
     if (query.isEmpty) {
+      print("query is empty");
+      print(participantDetails);
       resetFilters();
     } else {
+      print(query);
       // Apply search filter
       filteredEvaluations.assignAll(
         evaluations.where((evaluation) {
+          print("calma1");
+          print(evaluation);
+          print("calma2");
+
+          print(participantDetails);
           final participant = participantDetails[evaluation.participantID];
           return participant?.name.toLowerCase().contains(query.toLowerCase()) ?? false;
         }).toList(),
@@ -250,6 +282,7 @@ class HomeController extends GetxController {
     }
     update();
   }
+
 
   void setEvaluationInProgress(int evaluationId) {
     var index =

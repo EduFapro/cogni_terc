@@ -17,4 +17,7 @@ class UiMessages extends Translations {
   static String get taskCompleted => 'task_completed'.tr;
   static String get allTasksCompleted => "all_tasks_completed".tr;
   static String get allTasksCompletedInModule => "all_tasks_completed_in_module".tr;
+  static String get invalidUsernameOrPassword => 'invalid_username_or_password'.tr;
+  static String get userNotFound => 'user_not_found'.tr;
+  static String get loginFailed => 'login_failed'.tr;
 }

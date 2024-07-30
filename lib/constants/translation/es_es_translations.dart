@@ -80,4 +80,8 @@ final Map<String, String> esEsTranslations = {
   'task_completed' : '¡El tiempo para completar esta tarea ha expirado!',
   "all_tasks_completed" : '¡Todas las tareas han sido completadas!',
   "all_tasks_completed_in_module": 'Has completado todas las tareas en este módulo.',
+  'invalid_username_or_password': "Nombre de usuario o contraseña inválidos",
+  'user_not_found': "Usuario no encontrado. Por favor, verifica tu nombre de usuario e inténtalo de nuevo.",
+  'login_failed': "Fallo en el inicio de sesión, por favor inténtalo de nuevo más tarde"
+
 };

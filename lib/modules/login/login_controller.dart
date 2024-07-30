@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import '../../app/evaluator/evaluator_entity.dart';
 import '../../app/evaluator/evaluator_repository.dart';
+import '../../constants/translation/ui_messages.dart';
 import '../../global/user_service.dart';
 
 class LoginController extends GetxController {
@@ -29,13 +30,13 @@ class LoginController extends GetxController {
           isLoading.value = false;
           return true;
         } else {
-          loginError.value = "Invalid username or password";
+          loginError.value = UiMessages.invalidUsernameOrPassword;
         }
       } else {
-        loginError.value = "User not found. Please check your username and try again.";
+        loginError.value = UiMessages.userNotFound;
       }
     } catch (e) {
-      loginError.value = "Login failed, please try again later";
+      loginError.value = UiMessages.loginFailed;
     }
 
     isLoading.value = false;

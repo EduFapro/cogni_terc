@@ -79,4 +79,7 @@ final Map<String, String> ptBrTranslations = {
   'task_completed' : 'O tempo para terminar essa tarefa esgotou.',
   'all_tasks_completed': 'Todas tarefas concluídas!',
   'all_tasks_completed_in_module': 'Você concluiu todas as tarefas deste módulo.',
+  'invalid_username_or_password': "Usuário ou senha inválidos",
+  'user_not_found': "Usuário não encontrado. Por favor, verifique seu nome de usuário e tente novamente.",
+  'login_failed': "Falha no login, por favor tente novamente mais tarde"
 };
