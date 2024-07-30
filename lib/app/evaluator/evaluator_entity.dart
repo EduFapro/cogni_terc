@@ -113,7 +113,7 @@ class EvaluatorEntity extends Equatable {
         'Is Admin: ${isAdmin ? "Yes" : "No"}'
         '}';
   }
-
+  get fullName => '$name $surname';
 }
 
 
