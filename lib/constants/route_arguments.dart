@@ -7,4 +7,5 @@ class RouteArguments {
   static final EVALUATION = 'evaluation';
   static final PARTICIPANT = 'participant';
   static final MODULE_INSTANCE = 'module_instance';
+  static final CONFIG_ADMIN = 'config_admin';
 }

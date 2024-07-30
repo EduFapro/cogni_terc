@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
-import '../seeders/admin_seeder.dart';
 import '../seeders/modules/modules_seeds.dart';
 import '../seeders/prompts_seeder/prompts_seeds.dart';
 import '../seeders/tasks/task_seeds.dart';
@@ -48,6 +47,12 @@ class DatabaseHelper {
     }
   }
 
+  Future<bool> isAdminConfigured() async {
+    final db = await this.db;
+    var result = await db.query(TABLE_EVALUATORS, where: "is_admin = ?", whereArgs: [1]);
+    return result.isNotEmpty;
+  }
+
   void _onCreate(Database db, int newVersion) async {
     try {
       await db.execute(SCRIPT_CREATE_TABLE_EVALUATORS);
@@ -77,12 +82,12 @@ class DatabaseHelper {
     for (var taskPrompt in tasksPromptsList) {
       await db.insert(TABLE_TASK_PROMPTS, taskPrompt.toMap());
     }
-    print("Config.adminMap: ${Config.adminMap}");
-    try {
-      await db.insert(TABLE_EVALUATORS, Config.adminMap);
-    } catch (e) {
-      "NÃO DEU P INSERIR NO BD $e";
-      "Config.adminMap: ${Config.adminMap}";
-    }
+    // print("Config.adminMap: ${Config.adminMap}");
+    // try {
+    //   await db.insert(TABLE_EVALUATORS, Config.adminMap);
+    // } catch (e) {
+    //   "NÃO DEU P INSERIR NO BD $e";
+    //   "Config.adminMap: ${Config.adminMap}";
+    // }
   }
 }

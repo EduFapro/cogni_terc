@@ -29,6 +29,7 @@ final Map<String, String> enUsTranslations = {
   'evaluators_list': 'Evaluators List',
   'new_evaluator': 'New Evaluator',
   'evaluator_registration': 'Evaluator Registration',
+  'admin_registration': 'Admin Registration',
   'specialty': 'Specialty',
   'cpf': 'CPF',
   'evaluation': 'Evaluation',

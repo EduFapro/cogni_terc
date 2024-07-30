@@ -47,7 +47,7 @@ class EvaluatorLocalDataSource {
           SPECIALTY_EVALUATOR: evaluator.specialty,
           PASSWORD_EVALUATOR: evaluator.password,
           FIRST_LOGIN: 1,
-          IS_ADMIN: 0,
+          IS_ADMIN: evaluator.isAdmin ? 1 : 0,
         },
         conflictAlgorithm: ConflictAlgorithm.replace,
       );

@@ -21,6 +21,7 @@ import '../app/module_instance/module_instance_repository.dart';
 import '../file_management/file_encryptor.dart';
 import '../modules/eval_data/eval_data_service.dart';
 import '../modules/evaluation/evaluation_service.dart';
+import '../modules/evaluators/evaluators_controller.dart';
 import 'language_controller.dart';
 import 'user_service.dart';
 
@@ -109,5 +110,6 @@ class GlobalBinding extends Bindings {
     final fileEncryptor = FileEncryptor(key);
 
     Get.put<FileEncryptor>(fileEncryptor, permanent: true);
+    Get.lazyPut<EvaluatorsController>(() => EvaluatorsController(), fenix: true);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:window_manager/window_manager.dart';
@@ -23,7 +23,7 @@ void main() async {
   });
 
   try {
-    await dotenv.load(fileName: ".env");
+    // await dotenv.load(fileName: ".env");
 
     // Initialize sqflite for FFI (used in desktop applications)
     sqfliteFfiInit();
@@ -32,7 +32,11 @@ void main() async {
     // Now initialize the database
     await DatabaseHelper().initDb();
 
-    runApp(MyApp());
+
+    bool isAdminConfigured = await DatabaseHelper().isAdminConfigured();
+
+    runApp(MyApp(isAdminConfigured: isAdminConfigured));
+
   } catch (e) {
     print("Initialization Error: $e");
     // Handle the initialization error
@@ -40,6 +44,10 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
+  final bool isAdminConfigured;
+
+  MyApp({required this.isAdminConfigured});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -49,7 +57,7 @@ class MyApp extends StatelessWidget {
       initialBinding: GlobalBinding(),
       title: 'CogniVoice',
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: AppRoutes.login,
+      initialRoute: AppRoutes.initialRoute,
       getPages: routes,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
@@ -57,8 +65,8 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: [
-        const Locale('en', ''), // English, no country code
-        const Locale('pt', 'BR'), // Portuguese, Brazil
+        const Locale('en', ''),
+        const Locale('pt', 'BR'),
         const Locale('es', 'ES'),
       ],
     );

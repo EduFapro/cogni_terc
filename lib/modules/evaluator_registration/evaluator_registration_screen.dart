@@ -9,15 +9,16 @@ class EvaluatorRegistrationScreen extends GetView<EvaluatorRegistrationControlle
 
   @override
   Widget build(BuildContext context) {
+    final pageTitle = controller.saveAsAdmin.isTrue ? UiStrings.adminRegistration : UiStrings.evaluatorRegistration;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Color(0xfffdfdfd),
         iconTheme: IconThemeData(color: Colors.black),
-        title: Text(UiStrings.evaluatorRegistration, style: TextStyle(color: Colors.black)),
+        title: Text(pageTitle, style: TextStyle(color: Colors.black)),
         centerTitle: true,
       ),
-      body: EdEvaluatorForm(),
+      body: EdEvaluatorForm(pageTitle: pageTitle),
     );
   }
 }

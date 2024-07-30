@@ -15,6 +15,7 @@ final Map<String, String> esEsTranslations = {
   'evaluator': 'Evaluador',
   'date': 'Fecha',
   'participant_registration': 'Registro de Avaliando',
+  'admin_registration': 'Registro de Administrador',
   'identification_data': 'Datos de Identificación',
   'full_name': 'Nombre Completo',
   'date_of_birth': 'Fecha de Nacimiento',

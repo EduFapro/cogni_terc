@@ -1,5 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
+import 'global/global_binding.dart';
+import 'modules/InitialRoute/InitialRouteScreen.dart';
 import 'modules/evaluation/evaluation_binding.dart';
 import 'modules/evaluation/evaluation_screen.dart';
 import 'modules/evaluator_registration/evaluator_registration_binding.dart';
@@ -29,9 +31,15 @@ class AppRoutes {
   static const task = '/task';
   static const newPassword = '/new_password';
   static const userProfileScreen = '/user_profile_screen';
+  static const initialRoute = '/';
 }
 
 final routes = [
+  GetPage(
+    name: AppRoutes.initialRoute,
+    page: () => InitialRouteScreen(),
+    binding: GlobalBinding(),
+  ),
   GetPage(
     name: AppRoutes.home,
     page: () => HomeScreen(),

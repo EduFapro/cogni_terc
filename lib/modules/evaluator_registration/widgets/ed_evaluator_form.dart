@@ -4,11 +4,14 @@ import 'package:intl/intl.dart';
 
 import '../../../constants/translation/ui_strings.dart';
 import '../../../mixins/ValidationMixin.dart';
+import '../../../routes.dart';
 import '../evaluator_registration_controller.dart';
 
 class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
     with ValidationMixin {
-  EdEvaluatorForm({Key? key}) : super(key: key);
+  final pageTitle;
+
+  EdEvaluatorForm({Key? key, required this.pageTitle}) : super(key: key);
 
   final controller = Get.find<EvaluatorRegistrationController>();
 
@@ -31,7 +34,7 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              UiStrings.evaluatorRegistration,
+              pageTitle,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -75,7 +78,7 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
                                 BorderSide(color: Colors.red, width: 2.0),
                               ),
                             ),
-                            readOnly: !(controller.isEditMode.value),
+                            // readOnly: !(controller.isEditMode.value),
                             onTap: () => controller.selectDate(context),
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -149,12 +152,11 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
                           width: fieldWidthRow2,
                           child: Obx(() => TextFormField(
                             controller: controller.usernameController,
-                            decoration: InputDecoration(labelText: UiStrings.username),
-                            readOnly: !(controller.isEditMode.value),  // Make this field editable only in edit mode
+                            decoration: InputDecoration(
+                                labelText: UiStrings.username),
+                            readOnly: !(controller.isEditMode.value),
                           )),
                         ),
-
-
                       ],
                     ),
                     SizedBox(height: 16.0),
@@ -165,7 +167,7 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
                             width: fieldWidthRow2,
                             // Use the same width as the password fields
                             child: SwitchListTile(
-                              title: Text("Modify Password"),
+                              title: Text(UiStrings.modifyPassword),
                               value:
                               controller.isPasswordChangeEnabled.value,
                               onChanged: (bool value) {
@@ -289,7 +291,9 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
                                 '';
                               }
 
+                              print("hahah - 1");
                               if (controller.formKey.currentState!.validate()) {
+                                print("hahah - 2");
                                 // If all fields are valid, proceed
                                 if (controller.isUsernameValid.isTrue) {
                                   bool success;
@@ -299,7 +303,11 @@ class EdEvaluatorForm extends GetView<EvaluatorRegistrationController>
                                       : success =
                                   await controller.createEvaluator();
                                   if (success) {
-                                    Get.back();
+                                    print("BELEZURA");
+                                    print(controller.saveAsAdmin.isTrue);
+                                    controller.saveAsAdmin.isTrue
+                                        ? Get.toNamed(AppRoutes.login)
+                                        : Get.back();
                                   } else {
                                     print(
                                         'Failed to create or update evaluator'); // Debugging print statement

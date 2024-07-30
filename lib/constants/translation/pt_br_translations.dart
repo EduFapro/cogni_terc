@@ -29,6 +29,7 @@ final Map<String, String> ptBrTranslations = {
   'evaluators_list': 'Lista de Avaliadores',
   'new_evaluator': 'Novo Avaliador',
   'evaluator_registration': 'Registro de Avaliador',
+  'admin_registration': 'Registro de Administrador',
   'specialty': 'Especialidade',
   'cpf': 'CPF',
   'evaluation': 'Avaliação',
