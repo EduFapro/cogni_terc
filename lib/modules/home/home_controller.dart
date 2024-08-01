@@ -50,7 +50,6 @@ class HomeController extends GetxController {
     print("HomeController initialized");
     setupListeners();
     fetchData().then((_) {
-
       filteredEvaluations.assignAll(evaluations);
     });
     numEvaluationsTotal.value = evaluations.length;
@@ -58,10 +57,10 @@ class HomeController extends GetxController {
     ever(selectedStatus, (_) => filterEvaluationsByStatus());
     ever(
         evaluations,
-            (_) => {
-          // Ensure filteredEvaluations is updated whenever evaluations list changes
-          filterEvaluationsByStatus()
-        });
+        (_) => {
+              // Ensure filteredEvaluations is updated whenever evaluations list changes
+              filterEvaluationsByStatus()
+            });
     searchController.addListener(() {
       performSearch(searchController.text);
     });
@@ -72,13 +71,14 @@ class HomeController extends GetxController {
     super.onReady();
     refreshEvaluations();
   }
-  var hoverStates = Map<int, RxBool>().obs;
 
+  var hoverStates = Map<int, RxBool>().obs;
 
   // Function to set hover state
 
   void setHoverState(int evaluationID, IconData iconData, bool isHovering) {
-    int uniqueKey = evaluationID.hashCode ^ iconData.hashCode; // Unique identifier for each icon
+    int uniqueKey = evaluationID.hashCode ^
+        iconData.hashCode; // Unique identifier for each icon
     hoverStates[uniqueKey] = isHovering.obs; // Use .obs to make it observable
   }
 
@@ -108,7 +108,8 @@ class HomeController extends GetxController {
       participants.assignAll(newParticipants);
       // Populate participantDetails map
       participantDetails.assignAll({
-        for (var participant in newParticipants) participant.participantID!: participant
+        for (var participant in newParticipants)
+          participant.participantID!: participant
       });
       update();
     });
@@ -122,7 +123,6 @@ class HomeController extends GetxController {
     isLoading.value = true;
 
     user.value = userService.user.value;
-
 
     if (user.value?.isAdmin ?? false) {
       await userService.fetchAllEvaluationsAndParticipants();
@@ -174,7 +174,8 @@ class HomeController extends GetxController {
     participants.assignAll(updatedParticipants);
 
     participantDetails.assignAll({
-      for (var participant in updatedParticipants) participant.participantID!: participant
+      for (var participant in updatedParticipants)
+        participant.participantID!: participant
     });
 
     isLoading.value = false;
@@ -183,9 +184,17 @@ class HomeController extends GetxController {
 
   Future<void> handleDownload(
       int evaluationId, String evaluatorId, String participantId) async {
+    Get.snackbar(
+      "Download",
+      "Download sendo realizado...",
+      snackPosition: SnackPosition.TOP,
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.lightBlueAccent,
+    );
+
     // 1. Fetch all task instances related to the evaluation
     List<TaskInstanceEntity> taskInstances =
-    await fetchTaskInstancesForEvaluation(evaluationId);
+        await fetchTaskInstancesForEvaluation(evaluationId);
 
     // 2. Fetch all recordings for these task instances
     List<RecordingFileEntity> recordings = [];
@@ -197,16 +206,16 @@ class HomeController extends GetxController {
 
     // 3. Create the folder in the downloads directory
     String downloadFolderPath =
-    await createDownloadFolder(evaluatorId, participantId);
+        await createDownloadFolder(evaluatorId, participantId);
 
     // 4. Copy the audio files to the new folder
     // Decrypt files and rename them back to .aac
     for (var recording in recordings) {
       String encryptedFilePath = recording.filePath;
       String fileNameWithoutExtension =
-      path.basenameWithoutExtension(encryptedFilePath);
+          path.basenameWithoutExtension(encryptedFilePath);
       String decryptedFilePath =
-      path.join(downloadFolderPath, "$fileNameWithoutExtension");
+          path.join(downloadFolderPath, "$fileNameWithoutExtension");
 
       // Decrypt the file back to its original form
       await fileEncryptor.decryptFile(encryptedFilePath, decryptedFilePath);
@@ -276,17 +285,19 @@ class HomeController extends GetxController {
 
           print(participantDetails);
           final participant = participantDetails[evaluation.participantID];
-          return participant?.name.toLowerCase().contains(query.toLowerCase()) ?? false;
+          return participant?.name
+                  .toLowerCase()
+                  .contains(query.toLowerCase()) ??
+              false;
         }).toList(),
       );
     }
     update();
   }
 
-
   void setEvaluationInProgress(int evaluationId) {
     var index =
-    evaluations.indexWhere((eval) => eval.evaluationID == evaluationId);
+        evaluations.indexWhere((eval) => eval.evaluationID == evaluationId);
     if (index != -1) {
       var evaluation = evaluations[index];
       evaluation.status = EvaluationStatus.in_progress;
@@ -318,18 +329,33 @@ class HomeController extends GetxController {
   }
 
   Future<void> deleteEvaluation({required EvaluationEntity evaluation}) async {
-    isLoading(true);
-    var deleteResult = await userService.deleteEvaluation(evaluation);
+    bool confirmed = await Get.dialog(
+      AlertDialog(
+        title: Text('Confirmação Deletar'),
+        content: Text('Tem certeza de que deseja deletar esta avaliação?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false), // Cancel
+            child: Text('CANCELAR'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true), // Confirm
+            child: Text('Deletar'),
+          ),
+        ],
+      ),
+    );
 
-    if (deleteResult != null) {
-      evaluations.remove(evaluation);
+    if (confirmed) {
+      isLoading(true);
+      var deleteResult = await userService.deleteEvaluation(evaluation);
 
-      refreshEvaluations();
-    } else {
+      if (deleteResult != null) {
+        evaluations.remove(evaluation);
+        refreshEvaluations();
+      }
 
+      isLoading(false); // Hide loading indicator
     }
-
-    isLoading(false); // Hide loading indicator
   }
-
 }

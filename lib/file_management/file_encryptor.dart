@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart' as encrypt;
 
 class FileEncryptor {
@@ -48,6 +49,18 @@ class FileEncryptor {
     final String decryptedPath = encryptedFilePath.replaceAll('.enc', '');
     await File(decryptedPath).writeAsBytes(decryptedBytes);
     return decryptedPath;
+  }
+
+  Future<Uint8List> decryptRecordingToMemory(String encryptedFilePath) async {
+    // Retrieve IV from the file
+    final ivFile = File('$encryptedFilePath.iv');
+    final ivBytes = await ivFile.readAsBytes();
+    final iv = encrypt.IV(ivBytes);
+
+    final fileContents = await File(encryptedFilePath).readAsBytes();
+    final decryptedBytes = encrypter.decryptBytes(encrypt.Encrypted(fileContents), iv: iv);
+
+    return Uint8List.fromList(decryptedBytes);
   }
 
 }

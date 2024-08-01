@@ -28,23 +28,23 @@ class EdEvaluationHistory extends GetView<HomeController> {
         SizedBox(height: 20),
         // Status counters
         Obx(() => buildIconLabel(
-          context,
-          Icons.folder_open,
-          UiStrings.totalProjects,
-          controller.numEvaluationsTotal.value,
-        )),
+              context,
+              Icons.folder_open,
+              UiStrings.totalProjects,
+              controller.numEvaluationsTotal.value,
+            )),
         Obx(() => buildIconLabel(
-          context,
-          Icons.hourglass_empty,
-          UiStrings.inProgress,
-          controller.numEvaluationsInProgress.value,
-        )),
+              context,
+              Icons.hourglass_empty,
+              UiStrings.inProgress,
+              controller.numEvaluationsInProgress.value,
+            )),
         Obx(() => buildIconLabel(
-          context,
-          Icons.check_circle_outline,
-          UiStrings.completed,
-          controller.numEvaluationsFinished.value,
-        )),
+              context,
+              Icons.check_circle_outline,
+              UiStrings.completed,
+              controller.numEvaluationsFinished.value,
+            )),
         SizedBox(height: 20),
         // Search bar and filter by status dropdown
         EdSearchBar(
@@ -105,7 +105,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
           1: FlexColumnWidth(2),
           2: FlexColumnWidth(2),
           3: FlexColumnWidth(2),
-          4: FixedColumnWidth(200),
+          4: FixedColumnWidth(300),
         },
         children: [
           TableRow(
@@ -155,7 +155,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
             final index = entry.key;
             final evaluation = entry.value;
             final participant = homeController.participants.firstWhere(
-                  (element) => element.participantID == evaluation.participantID,
+              (element) => element.participantID == evaluation.participantID,
             );
             final evaluator = homeController.evaluators[evaluation.evaluatorID];
             final Color backgroundColor = index % 2 == 0
@@ -191,8 +191,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
                     padding: const EdgeInsets.all(8.0),
                     child: Align(
                         alignment: Alignment.centerLeft,
-                        child:
-                        Text(evaluator!.fullName ?? 'Unknown')),
+                        child: Text(evaluator!.fullName ?? 'Unknown')),
                   ),
                 ),
                 TableCell(
@@ -209,7 +208,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         iconWithHoverEffect(
                             evaluation.evaluationID!, Icons.create_rounded, () {
@@ -217,7 +216,7 @@ class EdEvaluationHistory extends GetView<HomeController> {
                             AppRoutes.evaluation,
                             arguments: {
                               RouteArguments.EVALUATOR:
-                              homeController.user.value!,
+                                  homeController.user.value!,
                               RouteArguments.PARTICIPANT: participant,
                               RouteArguments.EVALUATION: evaluation,
                             },
@@ -232,14 +231,14 @@ class EdEvaluationHistory extends GetView<HomeController> {
                         SizedBox(width: 8),
                         iconWithHoverEffect(
                             evaluation.evaluationID!, Icons.download_rounded,
-                                () {
-                              homeController.handleDownload(
-                                evaluation.evaluationID!,
-                                evaluation.evaluatorID.toString(),
-                                evaluation.participantID.toString(),
-                              );
-                              homeController.createDownload(evaluation);
-                            }, "Download"),
+                            () {
+                          homeController.handleDownload(
+                            evaluation.evaluationID!,
+                            evaluation.evaluatorID.toString(),
+                            evaluation.participantID.toString(),
+                          );
+                          homeController.createDownload(evaluation);
+                        }, "Download"),
                       ],
                     ),
                   ),
@@ -274,23 +273,32 @@ class EdEvaluationHistory extends GetView<HomeController> {
 
     return Obx(() {
       bool isHovering = controller.hoverStates[uniqueKey]?.value ?? false;
-      return MouseRegion(
-        onEnter: (_) => controller.setHoverState(evaluationID, iconData, true),
-        onExit: (_) => controller.setHoverState(evaluationID, iconData, false),
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: onTap,
-              child: Icon(
-                iconData,
-                color: isHovering ? Colors.blue : Colors.grey,
-              ),
+      return GestureDetector(
+        onTap: onTap,
+        child: MouseRegion(
+          onEnter: (_) =>
+              controller.setHoverState(evaluationID, iconData, true),
+          onExit: (_) =>
+              controller.setHoverState(evaluationID, iconData, false),
+          child: Container(
+            width: 80,
+            decoration: BoxDecoration(
+              color: isHovering ? Colors.lightBlueAccent : Colors.grey,
+              borderRadius: BorderRadius.circular(8),
             ),
-            Text(
-              label,
-              style: TextStyle(fontSize: 14),
+            child: Column(
+              children: [
+                Icon(
+                  iconData,
+                  color: isHovering ? Colors.black45 : Colors.white70,
+                ),
+                Text(
+                  label,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       );
     });
@@ -332,18 +340,18 @@ class StatusSwitchFilter extends GetView<HomeController> {
                   items: EvaluationStatus.values
                       .map<DropdownMenuItem<EvaluationStatus>>(
                           (EvaluationStatus status) {
-                        return DropdownMenuItem<EvaluationStatus>(
-                          value: status,
-                          child: Text(status.description,
-                              style: TextStyle(color: Colors.white)),
-                        );
-                      }).toList(),
+                    return DropdownMenuItem<EvaluationStatus>(
+                      value: status,
+                      child: Text(status.description,
+                          style: TextStyle(color: Colors.white)),
+                    );
+                  }).toList(),
                   hint: controller.selectedStatus.value == null
                       ? Text(
-                    UiStrings.select,
-                    style:
-                    TextStyle(color: Colors.white.withOpacity(0.7)),
-                  )
+                          UiStrings.select,
+                          style:
+                              TextStyle(color: Colors.white.withOpacity(0.7)),
+                        )
                       : null,
                 ),
               ),

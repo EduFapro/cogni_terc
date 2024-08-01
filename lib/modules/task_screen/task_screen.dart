@@ -463,6 +463,7 @@ class TaskScreen extends GetView<TaskScreenController> {
                 onPressed: () {
                   Get.back(); // Close the dialog
                   audioPlayer.stop(); // Stop the sound if needed
+                  controller.onCheckButtonPressed();
                 },
                 child: Text('OK'),
               ),

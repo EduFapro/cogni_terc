@@ -588,37 +588,26 @@ class TaskScreenController extends GetxController {
     print("HOHOHOHUHO");
     print(playbackPath.value);
     final String encryptedFilePath = playbackPath.value;
+
     final FileEncryptor fileEncryptor = Get.find<FileEncryptor>();
     try {
-      // Decrypt the recording file before playback
-      final String decryptedFilePath =
-          await fileEncryptor.decryptRecording(encryptedFilePath);
-      print(decryptedFilePath);
-
-      // Read the decrypted file into a byte array
-      final Uint8List audioBytes = await File(decryptedFilePath).readAsBytes();
+      // Decrypt the recording file into a byte array
+      final Uint8List decryptedAudioBytes = await fileEncryptor.decryptRecordingToMemory(encryptedFilePath);
+      print("Decrypted audio loaded into memory");
 
       // Play the decrypted audio file using BytesSource
-      final BytesSource bytesSource = BytesSource(audioBytes);
+      final BytesSource bytesSource = BytesSource(decryptedAudioBytes);
       isPlayingPlayback.value = true; // Set to true when playback starts
       await _audioPlayer.play(bytesSource);
       isRecentlyRecordedAudioPlaying.value = true;
 
-      _playerCompleteSubscription =
-          _audioPlayer.onPlayerComplete.listen((_) async {
+      _playerCompleteSubscription = _audioPlayer.onPlayerComplete.listen((_) async {
         isPlayingPlayback.value = false;
         isRecentlyRecordedAudioPlaying.value = false;
-        print("Tentando apagar, que doido");
-        // Clean up the decrypted file after playback
-        try {
-          await File(decryptedFilePath).delete();
-          print("Decrypted file deleted successfully");
-        } catch (error) {
-          print("Error deleting decrypted file: $error");
-        } finally {
-          _playerCompleteSubscription?.cancel();
-          _playerCompleteSubscription = null;
-        }
+        print("Playback completed");
+        // No need to delete a file since it's in memory
+        _playerCompleteSubscription?.cancel();
+        _playerCompleteSubscription = null;
       });
     } catch (e) {
       print("Error playing test audio: $e");
@@ -626,24 +615,9 @@ class TaskScreenController extends GetxController {
     }
   }
 
-  Future<void> stopRecentlyRecorded() async {
-    String encryptedFilePath = '';
-    String decryptedFilePath = '';
 
-    if (playbackPath.value != '') {
-      encryptedFilePath = playbackPath.value;
-      decryptedFilePath =
-          encryptedFilePath.substring(0, encryptedFilePath.lastIndexOf('.enc'));
-      try {
-        await File(decryptedFilePath).delete();
-        print("Decrypted file deleted successfully");
-      } catch (error) {
-        print("Error deleting decrypted file: $error");
-      } finally {
-        _playerCompleteSubscription?.cancel();
-        _playerCompleteSubscription = null;
-      }
-    }
+
+  Future<void> stopRecentlyRecorded() async {
 
     try {
       await _audioPlayer.stop();
